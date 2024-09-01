@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
+import sendResponse from "../utils/sendResponse";
 
 const globalErrorHandler = (
   err: any,
@@ -12,7 +13,8 @@ const globalErrorHandler = (
   const statusCode = httpStatus.INTERNAL_SERVER_ERROR;
   const message = err.message || "Error occurred";
 
-  return res.status(statusCode).json({
+  return sendResponse(res, {
+    statusCode,
     success: false,
     message,
     data: null,
