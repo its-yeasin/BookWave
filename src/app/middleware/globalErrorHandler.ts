@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import sendResponse from "../utils/sendResponse";
-import { TErrorSource } from "../interface/error";
+import { TErrorSource } from "../interface/interface.error";
 import { configs } from "../config";
 import { ZodError } from "zod";
 import handleZodError from "../error/handlerZodError";
+import handlerValidationError from "../error/handlerValidationError";
+import handleCastError from "../error/handleCastError";
 
 const globalErrorHandler = (
   err: any,
@@ -29,13 +30,25 @@ const globalErrorHandler = (
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
+  } else if (err.name === "ValidationError") {
+    const simplifiedError = handlerValidationError(err);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (err.code === 11000) {
+    const simplifiedError = handleCastError(err);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
   }
 
-  return sendResponse(res, {
-    statusCode,
+  return res.status(statusCode).json({
     success: false,
     message,
     errorSources,
+    err: configs.isDev ? err : null,
     stack: configs.isDev ? err.stack : null,
   });
 };

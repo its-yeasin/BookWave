@@ -1,4 +1,4 @@
-import { TErrorSource } from "../interface/error";
+import { TErrorSource } from "../interface/interface.error";
 import mongoose from "mongoose";
 
 type TError = {

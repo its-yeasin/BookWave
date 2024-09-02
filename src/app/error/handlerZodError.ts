@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { TErrorSource } from "../interface/error";
+import { TErrorSource } from "../interface/interface.error";
 
 type TZodError = {
   statusCode: number;
