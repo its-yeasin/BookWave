@@ -7,6 +7,7 @@ import { TErrorSource } from "../interface/error";
 import { configs } from "../config";
 import { ZodError } from "zod";
 import handleZodError from "../error/handlerZodError";
+import handlerValidationError from "../error/handlerValidationError";
 
 const globalErrorHandler = (
   err: any,
@@ -31,11 +32,18 @@ const globalErrorHandler = (
     errorSources = simplifiedError.errorSources;
   }
 
-  return sendResponse(res, {
-    statusCode,
-    success: false,
+  if (err?.name === "ValidationError") {
+    const simplifiedError = handlerValidationError(err);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  }
+
+  return res.status(statusCode).json({
     message,
     errorSources,
+    err,
     stack: configs.isDev ? err.stack : null,
   });
 };
