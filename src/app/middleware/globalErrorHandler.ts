@@ -3,6 +3,10 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import sendResponse from "../utils/sendResponse";
+import { TErrorSource } from "../interface/error";
+import { configs } from "../config";
+import { ZodError } from "zod";
+import handleZodError from "../error/handlerZodError";
 
 const globalErrorHandler = (
   err: any,
@@ -10,15 +14,29 @@ const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  const statusCode = httpStatus.INTERNAL_SERVER_ERROR;
-  const message = err.message || "Error occurred";
+  let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
+  let message: string = err.message || "Error occurred";
+  let errorSources: TErrorSource = [
+    {
+      path: "",
+      message: "Error occurred",
+    },
+  ];
+
+  if (err instanceof ZodError) {
+    const simplifiedError = handleZodError(err);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  }
 
   return sendResponse(res, {
     statusCode,
     success: false,
     message,
-    data: null,
-    stack: err,
+    errorSources,
+    stack: configs.isDev ? err.stack : null,
   });
 };
 
