@@ -6,6 +6,7 @@ dotenv.config({
 });
 
 export const configs = {
+  isDev: process.env.NODE_ENV === "development",
   database_url: process.env.DATABASE_URL,
   port: process.env.PORT,
 };
