@@ -4,7 +4,7 @@ import { TErrorSource, TGenericResponse } from "../interface/interface.error";
 const handleDuplicateError = (err: any): TGenericResponse => {
   const statusCode = 400;
 
-  const regex = /"([^"]*)"/;
+  const regex = /{[^:]+:\s*([^}]+)}/;
   const element = err.message.match(regex)[0];
 
   const errorSources: TErrorSource = [
