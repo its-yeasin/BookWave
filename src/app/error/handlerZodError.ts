@@ -9,7 +9,10 @@ type TZodError = {
 
 const handleZodError = (err: ZodError): TZodError => {
   const statusCode = 400;
-  const message = err.message || "Validation error!";
+
+  const message =
+    err?.issues?.map((issue) => issue.message)?.toString() ||
+    "Validation error!";
   const errorSources: TErrorSource = err?.issues?.map((issue) => {
     return {
       path: issue?.path[issue?.path?.length - 1],
