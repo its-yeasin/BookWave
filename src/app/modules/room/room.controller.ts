@@ -51,7 +51,10 @@ const getSingleRoom = async (
 
 const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await RoomServices.updateRoomIntoDB(req.params?.id);
+    const result = await RoomServices.updateRoomIntoDB(
+      req.params?.id,
+      req.body
+    );
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,

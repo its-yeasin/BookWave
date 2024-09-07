@@ -24,6 +24,13 @@ const updateRoomValidationSchema = z.object({
       })
       .min(1, "Floor number should be minimum 1")
       .optional(),
+    pricePerSlot: z
+      .number({
+        required_error: "pricePerSlot field is required!",
+        invalid_type_error: "pricePerSlot must be in number",
+      })
+      .min(1, "pricePerSlot should be minimum 1")
+      .optional(),
     capacity: z
       .number({
         required_error: "Room capacity is required!",
@@ -72,6 +79,12 @@ const createRoomValidationSchema = z.object({
         invalid_type_error: "Floor number must be in number",
       })
       .min(1, "Floor number should be minimum 1"),
+    pricePerSlot: z
+      .number({
+        required_error: "pricePerSlot field is required!",
+        invalid_type_error: "pricePerSlot must be in number",
+      })
+      .min(1, "pricePerSlot should be minimum 1"),
     capacity: z
       .number({
         required_error: "Room capacity is required!",
