@@ -1,5 +1,5 @@
 import { z } from "zod";
-import dayjs from "dayjs";
+import { convertTimeToTimestamp } from "./slot.utils";
 
 const dateSchema = z.string().refine(
   (date) => {
@@ -40,12 +40,11 @@ const endTimeSchema = z.string().refine(
 const updateSlotValidationSchema = z.object({
   body: z
     .object({
-      name: z
+      room: z
         .string({
-          invalid_type_error: "Slot Name field must be in string",
+          required_error: "required!",
+          invalid_type_error: "Room field must be in string",
         })
-        .min(3, "Slot name should be minimum 3 characters!")
-        .max(20, "Slot name can be maximum 20 characters!")
         .optional(),
       date: dateSchema,
       startTime: startTimeSchema,
@@ -58,11 +57,11 @@ const updateSlotValidationSchema = z.object({
     })
     .refine(
       (body) => {
-        const startTime = dayjs(`2000-01-01T${body.startTime}`);
-        const endTime = dayjs(`2000-01-01T${body.endTime}`);
-
         // --Check if endTime is smaller than startTime
-        return !endTime.isBefore(startTime);
+        return (
+          convertTimeToTimestamp(body.endTime) >
+          convertTimeToTimestamp(body.startTime)
+        );
       },
       {
         message: "End time must be greater that Start time",
@@ -73,13 +72,10 @@ const updateSlotValidationSchema = z.object({
 const createSlotValidationSchema = z.object({
   body: z
     .object({
-      name: z
-        .string({
-          required_error: "required!",
-          invalid_type_error: "Slot Name field must be in string",
-        })
-        .min(3, "Slot name should be minimum 3 characters!")
-        .max(20, "Slot name can be maximum 20 characters!"),
+      room: z.string({
+        required_error: "required!",
+        invalid_type_error: "Room field must be in string",
+      }),
       date: dateSchema,
       startTime: startTimeSchema,
       endTime: endTimeSchema,
@@ -91,11 +87,11 @@ const createSlotValidationSchema = z.object({
     })
     .refine(
       (body) => {
-        const startTime = dayjs(`2000-01-01T${body.startTime}`);
-        const endTime = dayjs(`2000-01-01T${body.endTime}`);
-
         // --Check if endTime is smaller than startTime
-        return !endTime.isBefore(startTime);
+        return (
+          convertTimeToTimestamp(body.endTime) >
+          convertTimeToTimestamp(body.startTime)
+        );
       },
       {
         message: "End time must be greater that Start time",

@@ -1,7 +1,7 @@
 import { Model, Types } from "mongoose";
 
 export interface ISlot {
-  name: Types.ObjectId;
+  room: Types.ObjectId;
   date: string;
   startTime: string;
   endTime: string;
@@ -10,4 +10,5 @@ export interface ISlot {
 
 export interface SlotModel extends Model<ISlot> {
   isBooked(id: string): boolean;
+  isStartTimeSmallerThanExtEndTime(date: string, startTime: string): boolean;
 }
