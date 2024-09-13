@@ -23,7 +23,7 @@ const getAllSlot = async (req: Request, res: Response, next: NextFunction) => {
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
-      message: "Slots retrieved successfully",
+      message: "Available slots retrieved successfully",
       data: result,
     });
   } catch (err) {
