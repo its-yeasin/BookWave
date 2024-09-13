@@ -13,7 +13,7 @@ router.post(
 );
 
 // --Get All Slot
-router.get("/", SlotControllers.getAllSlot);
+router.get("/availability", SlotControllers.getAllSlot);
 
 // --Get Single Slot By ID
 router.get("/:id", SlotControllers.getSingleSlot);

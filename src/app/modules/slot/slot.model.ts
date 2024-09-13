@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { ISlot, SlotModel } from "./slot.interface";
 import { convertTimeToTimestamp } from "./slot.utils";
+import { Room } from "../room/room.model";
 
 const slotSchema = new mongoose.Schema<ISlot, SlotModel>(
   {
@@ -25,10 +26,10 @@ const slotSchema = new mongoose.Schema<ISlot, SlotModel>(
       type: Boolean,
       default: false,
     },
-  },
-  {
-    timestamps: true,
   }
+  // {
+  //   timestamps: true,
+  // }
 );
 
 slotSchema.static("isBooked", async function (id: string) {
@@ -55,5 +56,9 @@ slotSchema.static(
     return isExist;
   }
 );
+
+slotSchema.static("isRoomExist", async function (roomId: string) {
+  return !!(await Room.findById(roomId));
+});
 
 export const Slot = mongoose.model<ISlot, SlotModel>("Slot", slotSchema);

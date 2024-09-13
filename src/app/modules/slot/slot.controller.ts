@@ -19,7 +19,7 @@ const createSlot = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllSlot = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await SlotServices.getSlotsFromDB();
+    const result = await SlotServices.getSlotsFromDB(req.query);
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,

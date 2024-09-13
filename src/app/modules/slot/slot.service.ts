@@ -2,10 +2,14 @@ import httpStatus from "http-status";
 import AppError from "../../error/AppError";
 import { ISlot } from "./slot.interface";
 import { Slot } from "./slot.model";
-import { timeToMinutes } from "./slot.utils";
+import { formatTime, timeToMinutes } from "./slot.utils";
 
 const createSlotIntoDB = async (payload: ISlot) => {
-  const { date, startTime, endTime } = payload;
+  const { room, date, startTime, endTime } = payload;
+
+  if (!(await Slot.isRoomExist(room))) {
+    throw new AppError(httpStatus.NOT_FOUND, "Room doest not exist!");
+  }
 
   if (await Slot.isStartTimeSmallerThanExtEndTime(date, startTime)) {
     throw new AppError(409, "Time already taken");
@@ -29,13 +33,15 @@ const createSlotIntoDB = async (payload: ISlot) => {
     // store payload data to a variable
     const newPayload = { ...payload };
 
+    const newStartHour = formatTime(startHour + i);
+    const newMinute = formatTime(startMinute);
+    const newEndHour = formatTime(startHour + i + 1);
+
     // set new start time
-    newPayload.startTime =
-      (startHour + i)?.toString()?.padStart(2, "0") + ":" + startMinute;
+    newPayload.startTime = [newStartHour, newMinute].join(":");
 
     //set new end time
-    newPayload.endTime =
-      (startHour + i + 1)?.toString()?.padStart(2, "0") + ":" + startMinute;
+    newPayload.endTime = [newEndHour, newMinute].join(":");
 
     // push new data to slots array
     slots.push(newPayload);
@@ -44,8 +50,23 @@ const createSlotIntoDB = async (payload: ISlot) => {
   return result;
 };
 
-const getSlotsFromDB = async () => {
-  const result = await Slot.aggregate([{ $match: { isBooked: false } }]);
+const getSlotsFromDB = async (query: Record<string, unknown>) => {
+  const { date, roomId } = query;
+  const newQuery: {
+    date?: string;
+    room?: string;
+  } = {};
+
+  if (date) {
+    newQuery.date = date as string;
+  }
+  if (roomId) {
+    newQuery.room = roomId as string;
+  }
+
+  const result = await Slot.find({ isBooked: false, ...newQuery }).populate(
+    "room"
+  );
   return result;
 };
 

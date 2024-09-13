@@ -11,4 +11,5 @@ export interface ISlot {
 export interface SlotModel extends Model<ISlot> {
   isBooked(id: string): boolean;
   isStartTimeSmallerThanExtEndTime(date: string, startTime: string): boolean;
+  isRoomExist(roomId: Types.ObjectId): boolean;
 }
