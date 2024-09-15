@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { TUser } from "./user.interface";
+import { IUser, UserModel } from "./user.interface";
 import { configs } from "../../config";
 
-const userSchema = new mongoose.Schema<TUser>({
+const userSchema = new mongoose.Schema<IUser>({
   name: {
     type: String,
     required: true,
@@ -37,7 +37,7 @@ userSchema.pre("save", async function (next) {
   try {
     const hashedPassword = await bcrypt.hash(
       this.password,
-      Number(configs.jwt_access_secret)
+      Number(configs.salt_round)
     );
     this.password = hashedPassword;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,4 +46,15 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-export const User = mongoose.model("User", userSchema);
+userSchema.static("isValidUser", async function isValidUser(email: string) {
+  return await User.findOne({ email });
+});
+
+userSchema.static(
+  "isPasswordValid",
+  async function (plainPassword: string, hashedPassword: string) {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  }
+);
+
+export const User = mongoose.model<IUser, UserModel>("User", userSchema);
