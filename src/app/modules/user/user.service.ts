@@ -1,19 +1,13 @@
-import { TUser } from "./user.interface";
+import { IUser } from "./user.interface";
 import { User } from "./user.model";
+import { excludePasswordField } from "./user.utils";
 
-const createUserIntoDB = async (payload: TUser) => {
+const createUserIntoDB = async (payload: IUser) => {
   const insertedUserData = await User.create(payload);
 
-  const newUserData = {
-    _id: insertedUserData._id,
-    name: insertedUserData.name,
-    email: insertedUserData.email,
-    phone: insertedUserData.phone,
-    role: insertedUserData.role,
-    address: insertedUserData.address,
-  };
+  const userData = excludePasswordField(insertedUserData as IUser);
 
-  return newUserData;
+  return userData;
 };
 
 export const UserServices = {
