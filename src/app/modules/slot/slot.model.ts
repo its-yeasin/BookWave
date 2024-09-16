@@ -26,10 +26,10 @@ const slotSchema = new mongoose.Schema<ISlot, SlotModel>(
       type: Boolean,
       default: false,
     },
+  },
+  {
+    versionKey: false,
   }
-  // {
-  //   timestamps: true,
-  // }
 );
 
 slotSchema.static("isBooked", async function (id: string) {
