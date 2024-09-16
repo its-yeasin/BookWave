@@ -5,9 +5,10 @@ import httpStatus from "http-status";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { configs } from "../config";
 import { User } from "../modules/user/user.model";
+import { TUserRole } from "../modules/user/user.constants";
 
-export const auth = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+export const auth = (...requiredRoles: TUserRole[]) => {
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const authorization = req.headers.authorization;
 
     // split token from bearer token
@@ -36,10 +37,10 @@ export const auth = catchAsync(
     }
 
     // check if user is admin or not
-    if (user.role !== "admin") {
+    if (requiredRoles && !requiredRoles.includes(user.role)) {
       throw new AppError(httpStatus.UNAUTHORIZED, "Not authorized!");
     }
 
     next();
-  }
-);
+  });
+};
