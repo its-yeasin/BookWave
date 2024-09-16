@@ -75,24 +75,8 @@ const getSingleSlotFromDB = async (id: string) => {
   return result;
 };
 
-const updateSlotIntoDB = async (id: string, payload: Partial<ISlot>) => {
-  // --Check if slot exist or not
-  const extSlotData: ISlot | null = await Slot.findById(id);
-
-  if (!extSlotData) {
-    throw new AppError(httpStatus.NOT_FOUND, "Slot doest not exist!");
-  }
-
-  const result = await Slot.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
-
-  return result;
-};
-
 export const SlotServices = {
   createSlotIntoDB,
   getSlotsFromDB,
   getSingleSlotFromDB,
-  updateSlotIntoDB,
 };

@@ -49,26 +49,8 @@ const getSingleSlot = async (
   }
 };
 
-const updateSlot = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await SlotServices.updateSlotIntoDB(
-      req.params?.id,
-      req.body
-    );
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "Slot updated successfully",
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const SlotControllers = {
   createSlot,
   getAllSlot,
   getSingleSlot,
-  updateSlot,
 };
