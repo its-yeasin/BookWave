@@ -1,7 +1,8 @@
+import { Types } from "mongoose";
 import { IUser } from "./user.interface";
 
 interface IUserData extends IUser {
-  _id?: string;
+  _id?: Types.ObjectId;
 }
 
 export const excludePasswordField = (userData: IUserData) => {
