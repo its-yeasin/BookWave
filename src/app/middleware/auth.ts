@@ -41,6 +41,8 @@ export const auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, "Not authorized!");
     }
 
+    req.user = { userId: user._id, ...decoded };
+
     next();
   });
 };
