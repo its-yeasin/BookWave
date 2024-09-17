@@ -20,9 +20,6 @@ const createBookingValidationSchema = z.object({
     room: z.string({
       required_error: "Room is required",
     }),
-    user: z.string({
-      required_error: "User is required",
-    }),
   }),
 });
 

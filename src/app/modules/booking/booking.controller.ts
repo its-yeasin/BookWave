@@ -8,8 +8,12 @@ const createBooking = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { user, body } = req;
   try {
-    const result = await BookingServices.createBookingIntoDB(req.body);
+    const result = await BookingServices.createBookingIntoDB(
+      user?.userId as string,
+      body
+    );
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,

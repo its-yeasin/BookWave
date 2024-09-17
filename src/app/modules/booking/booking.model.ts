@@ -21,7 +21,6 @@ const bookingSchema = new mongoose.Schema<IBooking>(
     },
     user: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: "User",
     },
   },
