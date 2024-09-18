@@ -50,8 +50,10 @@ const createBookingIntoDB = async (userId: string, payload: IBooking) => {
 
   // format payload data
   const payloadData = {
-    userId,
-    ...payload,
+    date,
+    slots,
+    room,
+    user: userId,
   };
 
   const result = await Booking.create(payloadData);
