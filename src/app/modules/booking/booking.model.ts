@@ -3,6 +3,7 @@ import { IBooking } from "./booking.interface";
 import { Slot } from "../slot/slot.model";
 import AppError from "../../error/AppError";
 import httpStatus from "http-status";
+import { CONFIRM_STATUS } from "./booking.constants";
 
 const bookingSchema = new mongoose.Schema<IBooking>(
   {
@@ -25,6 +26,18 @@ const bookingSchema = new mongoose.Schema<IBooking>(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    isConfirmed: {
+      type: String,
+      required: true,
+      enum: Object.keys(CONFIRM_STATUS),
+    },
+    isDeleted: {
+      type: Boolean,
     },
   },
   {

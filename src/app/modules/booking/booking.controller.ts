@@ -17,7 +17,7 @@ const createBooking = async (
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
-      message: "Booking added successfully",
+      message: "Booking created successfully",
       data: result,
     });
   } catch (err) {

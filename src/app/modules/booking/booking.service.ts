@@ -4,12 +4,15 @@ import { Room } from "../room/room.model";
 import { IBooking } from "./booking.interface";
 import { Slot } from "../slot/slot.model";
 import { Booking } from "./booking.model";
+import mongoose from "mongoose";
+import { CONFIRM_STATUS } from "./booking.constants";
 
 const createBookingIntoDB = async (userId: string, payload: IBooking) => {
   const { date, slots, room } = payload;
 
+  const existingRoom = await Room.findById(room);
   // check if room exist or not
-  if (!(await Room.findById(room))) {
+  if (!existingRoom) {
     throw new AppError(httpStatus.NOT_FOUND, "Room doest not exist!");
   }
 
@@ -49,11 +52,14 @@ const createBookingIntoDB = async (userId: string, payload: IBooking) => {
   }
 
   // format payload data
-  const payloadData = {
+  const payloadData: IBooking = {
     date,
     slots,
     room,
-    user: userId,
+    user: new mongoose.Types.ObjectId(userId),
+    totalAmount: existingRoom.pricePerSlot * slots?.length,
+    isConfirmed: CONFIRM_STATUS.unconfirmed,
+    isDeleted: false,
   };
 
   const result = await Booking.create(payloadData);
