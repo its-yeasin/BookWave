@@ -37,9 +37,9 @@ const roomSchema = new mongoose.Schema<TRoom, RoomModel>(
   }
 );
 
-roomSchema.static("isDeleted", async function (id: string) {
+roomSchema.static("isRoomExist", async function (id: string) {
   const existingRoom: TRoom | null = await Room.findById(id);
-  return existingRoom?.isDeleted;
+  return existingRoom;
 });
 
 export const Room = mongoose.model<TRoom, RoomModel>("Room", roomSchema);

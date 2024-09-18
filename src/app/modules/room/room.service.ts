@@ -14,29 +14,19 @@ const getRoomsFromDB = async () => {
 };
 
 const getSingleRoomFromDB = async (id: string) => {
-  // --Check room delete status
-  const isRoomDeleted = await Room.isDeleted(id);
-  if (isRoomDeleted) {
+  // --Check if room already deleted or not exist
+  const extRoomData = await Room.isRoomExist(id);
+  if (!extRoomData || extRoomData.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "Room doest not exist!");
   }
 
-  const result = await Room.findById(id);
-  return result;
+  return extRoomData;
 };
 
 const updateRoomIntoDB = async (id: string, payload: Partial<TRoom>) => {
-  // const modifiedPayload: Partial<TRoom> = payload;
-
-  // --Check if room exist or not
-  const extRoomData: TRoom | null = await Room.findById(id);
-
-  if (!extRoomData) {
-    throw new AppError(httpStatus.NOT_FOUND, "Room doest not exist!");
-  }
-
-  // --Check room delete status
-  const isRoomDeleted = await Room.isDeleted(id);
-  if (isRoomDeleted) {
+  // --Check if room already deleted or not exist
+  const extRoomData = await Room.isRoomExist(id);
+  if (!extRoomData || extRoomData.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "Room doest not exist!");
   }
 
@@ -59,9 +49,9 @@ const updateRoomIntoDB = async (id: string, payload: Partial<TRoom>) => {
 };
 
 const deleteRoomFromDB = async (id: string) => {
-  // --Check room delete status
-  const isRoomDeleted = await Room.isDeleted(id);
-  if (isRoomDeleted) {
+  // --Check if room already deleted or not exist
+  const extRoomData = await Room.isRoomExist(id);
+  if (!extRoomData || extRoomData.isDeleted) {
     throw new AppError(httpStatus.NOT_FOUND, "Room doest not exist!");
   }
 

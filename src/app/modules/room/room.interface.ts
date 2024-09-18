@@ -11,5 +11,5 @@ export type TRoom = {
 };
 
 export interface RoomModel extends Model<TRoom> {
-  isDeleted(id: string): boolean;
+  isRoomExist(id: string): TRoom;
 }
