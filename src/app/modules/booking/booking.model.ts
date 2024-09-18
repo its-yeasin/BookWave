@@ -68,6 +68,14 @@ bookingSchema.pre("save", async function (next) {
   next();
 });
 
+bookingSchema.pre("findOneAndUpdate", async function (next) {
+  const existingBooking = await Booking.findById(this.getQuery()._id);
+  if (!existingBooking) {
+    throw new AppError(httpStatus.NOT_FOUND, "No booking found!");
+  }
+  next();
+});
+
 bookingSchema.post("save", async function (doc) {
   await doc.populate([
     {

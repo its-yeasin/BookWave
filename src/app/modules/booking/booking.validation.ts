@@ -11,6 +11,12 @@ const dateSchema = z.string().refine(
   }
 );
 
+const updateBookingValidationSchema = z.object({
+  body: z.object({
+    isConfirmed: z.enum(["confirmed", "unconfirmed", "canceled"]),
+  }),
+});
+
 const createBookingValidationSchema = z.object({
   body: z.object({
     date: dateSchema,
@@ -25,4 +31,5 @@ const createBookingValidationSchema = z.object({
 
 export const BookingValidations = {
   createBookingValidationSchema,
+  updateBookingValidationSchema,
 };

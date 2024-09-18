@@ -69,8 +69,12 @@ const updateBooking = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { isConfirmed } = req.body;
   try {
-    const result = await BookingServices.updateBookingIntoDB(req.params.id);
+    const result = await BookingServices.updateBookingIntoDB(
+      req.params.id,
+      isConfirmed
+    );
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
@@ -88,7 +92,7 @@ const deleteBooking = async (
   next: NextFunction
 ) => {
   try {
-    const result = await BookingServices.updateBookingIntoDB(req.params.id);
+    const result = await BookingServices.deleteBookingFromDB(req.params.id);
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,

@@ -20,7 +20,12 @@ router.post(
 router.get("/", auth(USER_ROLE.admin), BookingControllers.getAllBooking);
 
 // --Update Booking
-router.put("/:id", auth(USER_ROLE.admin), BookingControllers.updateBooking);
+router.put(
+  "/:id",
+  auth(USER_ROLE.admin),
+  validateRequest(BookingValidations.updateBookingValidationSchema),
+  BookingControllers.updateBooking
+);
 
 // --Delete Booking
 router.delete("/:id", auth(USER_ROLE.admin), BookingControllers.deleteBooking);
