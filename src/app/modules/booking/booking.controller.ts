@@ -49,7 +49,10 @@ const getOwnBookings = async (
   next: NextFunction
 ) => {
   try {
-    const result = await BookingServices.getOwnBookingsFromDB("email");
+    const { user } = req;
+    const result = await BookingServices.getOwnBookingsFromDB(
+      user?.userId as string
+    );
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,

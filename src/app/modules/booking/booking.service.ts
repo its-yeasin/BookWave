@@ -83,8 +83,20 @@ const getAllBookingsFromDB = async () => {
   return result;
 };
 
-const getOwnBookingsFromDB = async (email: string) => {
-  return email;
+const getOwnBookingsFromDB = async (userId: string) => {
+  const result = await Booking.find({
+    user: userId,
+  })
+    .populate([
+      {
+        path: "room",
+      },
+      {
+        path: "slots",
+      },
+    ])
+    .select("-user");
+  return result;
 };
 
 const updateBookingIntoDB = async (id: string) => {
