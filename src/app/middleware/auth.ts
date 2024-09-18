@@ -15,7 +15,10 @@ export const auth = (...requiredRoles: TUserRole[]) => {
     const token = authorization?.split(" ")[1];
 
     if (!authorization) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "User is not authorized");
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        "You have no access to this route"
+      );
     }
 
     if (!authorization.startsWith("Bearer")) {
@@ -38,7 +41,10 @@ export const auth = (...requiredRoles: TUserRole[]) => {
 
     // check if user is admin or not
     if (requiredRoles && !requiredRoles.includes(user.role)) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "Not authorized!");
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        "You have no access to this route"
+      );
     }
 
     req.user = { userId: user._id, ...decoded };
