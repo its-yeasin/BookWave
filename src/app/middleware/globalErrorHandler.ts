@@ -18,7 +18,7 @@ const globalErrorHandler = (
 ) => {
   let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
   let message: string = err.message || "Error occurred";
-  let errorSources: TErrorSource = [
+  let errorMessages: TErrorSource = [
     {
       path: "",
       message: "Error occurred",
@@ -30,30 +30,29 @@ const globalErrorHandler = (
 
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
+    errorMessages = simplifiedError.errorMessages;
   } else if (err.name === "ValidationError") {
     const simplifiedError = handlerValidationError(err);
 
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
+    errorMessages = simplifiedError.errorMessages;
   } else if (err?.name === "CastError") {
     const simplifiedError = handleCastError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+    errorMessages = simplifiedError?.errorMessages;
   } else if (err?.code === 11000) {
     const simplifiedError = handleDuplicateError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+    errorMessages = simplifiedError?.errorMessages;
   }
 
   return res.status(statusCode).json({
     success: false,
     message,
-    errorSources,
-    err: configs.isDev ? err : null,
+    errorMessages,
     stack: configs.isDev ? err.stack : null,
   });
 };

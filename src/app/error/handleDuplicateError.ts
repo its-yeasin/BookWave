@@ -7,7 +7,7 @@ const handleDuplicateError = (err: any): TGenericResponse => {
   const regex = /{[^:]+:\s*([^}]+)}/;
   const element = err.message.match(regex)[0];
 
-  const errorSources: TErrorSource = [
+  const errorMessages: TErrorSource = [
     {
       path: "",
       message: `${element} is already exist!`,
@@ -17,7 +17,7 @@ const handleDuplicateError = (err: any): TGenericResponse => {
   return {
     statusCode,
     message: "Duplicate error",
-    errorSources,
+    errorMessages,
   };
 };
 
