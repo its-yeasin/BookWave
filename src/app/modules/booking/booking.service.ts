@@ -106,16 +106,21 @@ const updateBookingIntoDB = async (id: string, isConfirmed: string) => {
       isConfirmed,
     },
     { new: true }
-  ).select("-totalAmount");
-  // if(!existingBooking){
-  //   throw new AppError(httpStatus.NOT_FOUND, 'No booking found!')
-  // }
+  );
 
   return result;
 };
 
 const deleteBookingFromDB = async (id: string) => {
-  return id;
+  const result = await Booking.findOneAndUpdate(
+    { _id: id },
+    {
+      isDeleted: true,
+    },
+    { new: true }
+  );
+
+  return result;
 };
 
 export const BookingServices = {
