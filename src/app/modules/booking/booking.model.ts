@@ -78,7 +78,7 @@ bookingSchema.post("save", async function (doc) {
     },
     {
       path: "user",
-      select: "-password",
+      select: "-password -__v",
     },
   ]);
 });

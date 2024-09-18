@@ -68,7 +68,19 @@ const createBookingIntoDB = async (userId: string, payload: IBooking) => {
 };
 
 const getAllBookingsFromDB = async () => {
-  return [{}];
+  const result = await Booking.find().populate([
+    {
+      path: "room",
+    },
+    {
+      path: "slots",
+    },
+    {
+      path: "user",
+      select: "-password -__v",
+    },
+  ]);
+  return result;
 };
 
 const getOwnBookingsFromDB = async (email: string) => {
