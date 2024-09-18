@@ -3,34 +3,39 @@ import bcrypt from "bcrypt";
 import { IUser, UserModel } from "./user.interface";
 import { configs } from "../../config";
 
-const userSchema = new mongoose.Schema<IUser>({
-  name: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema<IUser>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: ["user", "admin"],
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-    enum: ["user", "admin"],
-  },
-});
+  {
+    versionKey: false,
+  }
+);
 
 // hash password before save to DB
 userSchema.pre("save", async function (next) {
