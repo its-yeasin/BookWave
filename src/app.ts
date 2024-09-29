@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-app.use("/api/v1", router);
+app.use("/api", router);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("hello world");

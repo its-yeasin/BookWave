@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./dist/server.js",
-    "start:dev": "tsnd --respawn ./src/server.ts",
+    "start:dev": "npx ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "lint": "npx eslint src --ignore-pattern .ts",
     "lint:fix": "npx eslint src --fix",

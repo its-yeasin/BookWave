@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import sendResponse from "../utils/sendResponse";
-import { TErrorSource } from "../interface/error";
+import { TErrorSource } from "../interface/interface.error";
 import { configs } from "../config";
 import { ZodError } from "zod";
 import handleZodError from "../error/handlerZodError";
 import handlerValidationError from "../error/handlerValidationError";
+import handleCastError from "../error/handleCastError";
+import handleDuplicateError from "../error/handleDuplicateError";
 
 const globalErrorHandler = (
   err: any,
@@ -17,7 +18,7 @@ const globalErrorHandler = (
 ) => {
   let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
   let message: string = err.message || "Error occurred";
-  let errorSources: TErrorSource = [
+  let errorMessages: TErrorSource = [
     {
       path: "",
       message: "Error occurred",
@@ -29,21 +30,29 @@ const globalErrorHandler = (
 
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
-  }
-
-  if (err?.name === "ValidationError") {
+    errorMessages = simplifiedError.errorMessages;
+  } else if (err.name === "ValidationError") {
     const simplifiedError = handlerValidationError(err);
 
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
-    errorSources = simplifiedError.errorSources;
+    errorMessages = simplifiedError.errorMessages;
+  } else if (err?.name === "CastError") {
+    const simplifiedError = handleCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorMessages = simplifiedError?.errorMessages;
+  } else if (err?.code === 11000) {
+    const simplifiedError = handleDuplicateError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorMessages = simplifiedError?.errorMessages;
   }
 
   return res.status(statusCode).json({
+    success: false,
     message,
-    errorSources,
-    err,
+    errorMessages,
     stack: configs.isDev ? err.stack : null,
   });
 };
