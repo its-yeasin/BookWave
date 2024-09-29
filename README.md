@@ -65,88 +65,138 @@ yarn start
 
 ```
 
-## API Endpoints
-
-### Authentication
-
-**Sign Up**
-
-- **POST** /api/auth/sign-up
-- **Description:** Creates a new user.
-- **Request Body:**
+## Project Folder Structure
 
 ```
-{
-  "name": "Programming Hero",
-  "email": "web@programming-hero.com",
-  "password": "ph-password",
-  "phone": "1234567890",
-  "role": "admin",
-  "address": "123 Main Street, City, Country"
-}
-
-
-```
-
-**Login**
-
-- **POST** /api/auth/login
-- **Description:** Logs in a user and returns a JWT token.
-- **Request Body:**
-
-```
-{
-    "email": "web@programming-hero.com",
-    "password": "ph-password",
-}
-```
-
-### Rooms
-
-Create Room (Admin)
-
-- **POST** /api/rooms
-- **Description:** Admins can create rooms.
-- **Authorization:** Should have token in headers and must include "Bearer" at the beginning of the token
-- **Request Body:**
-
-```
-{
-  "name": "Conference Room",
-  "roomNo": 201,
-  "floorNo": 1,
-  "capacity": 20,
-  "pricePerSlot": 100,
-  "amenities": ["Projector", "Whiteboard"]
-}
-```
-
-Get All Rooms
-
-- **GET** /api/rooms
-- **Description:** Fetches all available rooms.
-
-```
-
+## src/
+│
+├── app/
+│   ├── config/
+│   │   └── index.ts
+│   ├── error/
+│   │   ├── handleCastError.ts
+│   │   ├── handleDuplicateError.ts
+│   │   ├── handleValidationError.ts
+│   │   └── handleZodError.ts
+│   ├── interface/
+│   │   └── index.ts
+│   ├── middleware/
+│   │   ├── globalErrorHandler.ts
+│   │   └── notFound.ts
+│   └── validateRequest.ts
+│
+├── modules/
+│   ├── auth/
+│   │   ├── auth.controller.ts
+│   │   ├── auth.interfaces.ts
+│   │   ├── auth.models.ts
+│   │   ├── auth.routes.ts
+│   │   ├── auth.services.ts
+│   │   └── auth.validation.ts
+│   ├── booking/
+│   │   ├── booking.constants.ts
+│   │   ├── booking.controller.ts
+│   │   ├── booking.interfaces.ts
+│   │   ├── booking.models.ts
+│   │   ├── booking.routes.ts
+│   │   ├── booking.services.ts
+│   │   └── booking.validation.ts
+│   ├── room/
+│   │   ├── room.constants.ts
+│   │   ├── room.controller.ts
+│   │   ├── room.interfaces.ts
+│   │   ├── room.models.ts
+│   │   ├── room.routes.ts
+│   │   ├── room.services.ts
+│   │   └── room.validation.ts
+│   ├── user/
+│       ├── user.controller.ts
+│       ├── user.interfaces.ts
+│       ├── user.models.ts
+│       ├── user.routes.ts
+│       ├── user.services.ts
+│       └── user.validation.ts
+│
+├── routes/
+│   └── index.ts
+│
+├── utils/
+│   ├── catchAsync.ts
+│   └── sendResponse.ts
+│
 
 ```
 
-### Slots
+## Project Folder Structure Explanation
 
-Create Slot (Admin)
+---
 
-- **POST** /api/slots
-- **Description:** Admins can create time slots for rooms.
-- **Authorization:** Should have token in headers and must include "Bearer" at the beginning of the token
-- **Request Body:**
+### `app/`
 
-```
-{
-  "name": "Conference Room",
-  "roomNo": 201,
-  "floorNo": 1,
-  "capacity": 20,
-  "pricePerSlot": 100,
-  "amenities": ["Projector", "Whiteboard"]
-}
-```
+This folder holds core configurations and utilities for the app, including error handling and middlewares.
+
+- **`config/`**: Contains configuration files for the application, contains .env configurations.
+- **`error/`**: Handles different types of errors that might occur, such as validation errors or casting errors. It includes utilities for creating user-friendly error messages.
+
+  - `handleCastError.ts`: Catches and handles casting errors.
+  - `handleDuplicateError.ts`: Handles error when a record is duplicated.
+  - `handleValidationError.ts`: Manages schema validation errors to ensure the data structure is correct before saving it to the database.
+  - `handleZodError.ts`: Handles errors from Zod schemas.
+
+- **`middleware/`**: Contains reusable middleware functions for handling errors, validation, and request processes.
+
+  - `globalErrorHandler.ts`: A centralized error-handling middleware given by express.js that processes all errors thrown in the app.
+  - `notFound.ts`: Middleware to catch unhandled routes and respond with a 404 error.
+
+- **`validateRequest.ts`**: A function that validates incoming requests based on pre-defined zod validation schema.
+
+---
+
+### `modules/`
+
+Each module represents a key part of the application's domain, such as authentication, booking, rooms, and users. Modules have their own substructure to maintain separation of concerns.
+
+- **`auth/`**: Handles user authentication (login, signup, etc.). Each file in this module focuses on one aspect:
+
+  - `auth.controller.ts`: Contains the logic for handling user login authentication
+  - `auth.models.ts`: Defines authentication schema model for mongoose.
+  - `auth.routes.ts`: Defines the API endpoints for authentication (e.g., `/login`, `/signup`).
+  - `auth.services.ts`: Contains business logic for processing authentication data and interacting with the database.
+  - `auth.validation.ts`: Contains validation logic to ensure user inputs (e.g., passwords, emails) are correct.
+
+- **`booking/`**: Manages all booking-related functionality, including creating, viewing, and managing bookings.
+
+  - `booking.controller.ts`: Defines logic for handling booking operations.
+  - `booking.services.ts`: Business logic for booking operations.
+  - `booking.routes.ts`: API endpoints for booking actions.
+  - `booking.validation.ts`: Ensures bookings are valid.
+
+- **`room/`**: Handles room management, including creating, updating, and viewing room details.
+
+  - `room.controller.ts`: Manages requests related to rooms.
+  - `room.models.ts`: Defines the structure of room data.
+  - `room.routes.ts`: API endpoints for room-related actions.
+  - `room.services.ts`: Handles business logic for managing rooms.
+
+- **`user/`**: Manages user-related data..
+  - `user.controller.ts`: Contains logic for handling user signup.
+  - `user.services.ts`: Contains business logic for user signup.
+
+---
+
+### `routes/`
+
+This directory defines the central routing mechanism for the entire application. The `index.ts` file imports and sets up routes from each module.
+
+---
+
+### `utils/`
+
+Contains reusable utility functions that are used throughout the project to handle asynchronous requests and send responses.
+
+- **`catchAsync.ts`**: A helper function that wraps async functions to automatically catch and handle errors.
+- **`sendResponse.ts`**: Standardizes how HTTP responses are sent from the server, ensuring consistency across all endpoints.
+
+---
+
+This structure ensures that the application is well-organized, with different sections of the app logically separated into their respective modules and utility folders. It follows common patterns used in TypeScript and Node.js applications, making it scalable and maintainable.
