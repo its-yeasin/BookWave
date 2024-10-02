@@ -11,7 +11,7 @@ BookWave is an online booking system for reserving co-working spaces and meeting
 Ensure you have the following installed on your machine:
 
 - **Node.js** (version >= 20)
-- **MongoDB** (running locally or on a cloud service like MongoDB Atlas)
+- **MongoDB** (running locally or MongoDB Atlas)
 
 ### Clone the Repository
 
@@ -198,5 +198,3 @@ Contains reusable utility functions that are used throughout the project to hand
 - **`sendResponse.ts`**: Standardizes how HTTP responses are sent from the server, ensuring consistency across all endpoints.
 
 ---
-
-This structure ensures that the application is well-organized, with different sections of the app logically separated into their respective modules and utility folders. It follows common patterns used in TypeScript and Node.js applications, making it scalable and maintainable.
